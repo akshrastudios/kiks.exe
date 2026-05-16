@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KIKS.EXE — Drop. Wear. Repeat.</title>
+<meta name="description" content="KIKS.EXE — Drop. Wear. Repeat. Premium sneakers and streetwear.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+
+</head>
+<body>
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">New Drops Every Friday</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Free Shipping Above ₹5,000</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Limited Releases</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Exclusive Collabs</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Sole Society</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">New Drops Every Friday</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Free Shipping Above ₹5,000</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Limited Releases</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Exclusive Collabs</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Sole Society</span><span class="ticker-dot">·</span>
+  </div>
+</div>
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">KIKS<span>.EXE</span></a>
+    <div class="nav-links">
+      <a href="/" class="nav-link active">HOME</a>
+      <a href="shop.html" class="nav-link">SHOP</a>
+      <a href="shop.html?category=Sneakers" class="nav-link">SNEAKERS</a>
+      <a href="shop.html?category=Hoodies" class="nav-link">HOODIES</a>
+      <a href="shop.html?category=Collab" class="nav-link">COLLABS</a>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-hamburger" onclick="openMobileNav()" aria-label="Menu">☰</button>
+      <button class="nav-search" onclick="toggleSearch()" aria-label="Search">⌕</button>
+      <button class="nav-icon-btn" onclick="location.href='account.html'" aria-label="Account">◯</button>
+      <button class="nav-cart-btn" onclick="location.href='cart.html'">BAG <span class="cart-count" id="cart-count">0</span></button>
+    </div>
+  </div>
+  <div class="search-bar" id="search-bar">
+    <input type="text" placeholder="Search drops, brands, styles..." id="search-input" onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="btn-ghost" onclick="doSearch()">SEARCH →</button>
+    <button class="btn-ghost" onclick="toggleSearch()">✕</button>
+  </div>
+</nav>
+<div class="mobile-drawer" id="mobile-drawer">
+  <button class="drawer-close" onclick="closeMobileNav()">✕</button>
+  <a href="/" onclick="closeMobileNav()">HOME</a>
+  <a href="shop.html" onclick="closeMobileNav()">SHOP</a>
+  <a href="shop.html?category=Sneakers" onclick="closeMobileNav()">SNEAKERS</a>
+  <a href="shop.html?category=Hoodies" onclick="closeMobileNav()">HOODIES</a>
+  <a href="shop.html?category=Collab" onclick="closeMobileNav()">COLLABS</a>
+  <a href="account.html" onclick="closeMobileNav()">ACCOUNT</a>
+  <a href="cart.html" onclick="closeMobileNav()">BAG</a>
+</div>
+<div class="toast" id="toast"><span class="toast-dot"></span><span class="toast-msg"></span></div>
+
+<!-- HERO -->
+<section class="hero-section" style="min-height:calc(100vh - 92px);display:grid;grid-template-columns:1fr 1fr;overflow:hidden;">
+  <div style="display:flex;flex-direction:column;justify-content:center;padding:5rem 3rem 5rem 2rem;border-right:1px solid var(--border2);">
+    <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.4em;color:var(--blue);margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;">
+      <span style="width:30px;height:1px;background:var(--blue);display:inline-block;"></span>
+      SEASON 01 DROP
+    </p>
+    <h1 style="font-family:var(--font-head);font-size:clamp(60px,10vw,120px);line-height:0.9;letter-spacing:0.04em;margin-bottom:1.5rem;">
+      DROP.<br>WEAR.<br><span style="color:var(--blue);">REPEAT.</span>
+    </h1>
+    <p style="font-size:13px;color:var(--silver);line-height:1.8;max-width:360px;margin-bottom:2.5rem;letter-spacing:0.04em;">
+      Limited drops. Exclusive collabs. Premium sneakers and streetwear for the sole obsessed.
+    </p>
+    <div id="hero-countdown" style="display:flex;gap:1.5rem;margin-bottom:2.5rem;"></div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="location.href='shop.html'" style="font-size:18px;padding:14px 32px;">SHOP THE DROP</button>
+      <button class="btn-outline" onclick="location.href='shop.html?badge=Ltd'" style="font-size:18px;padding:14px 32px;">LIMITED ONLY</button>
+    </div>
+  </div>
+  <div id="hero-img" style="position:relative;overflow:hidden;background:var(--bg3);" onclick="location.href='shop.html'" >
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,6,15,0.4) 0%,transparent 40%);z-index:1;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:2rem;right:2rem;z-index:2;text-align:right;">
+      <p style="font-family:var(--font-head);font-size:11px;letter-spacing:0.3em;color:var(--blue);margin-bottom:4px;">FEATURED DROP</p>
+      <p style="font-family:var(--font-head);font-size:22px;letter-spacing:0.08em;color:#fff;" id="hero-pname">Loading...</p>
+      <p style="font-size:13px;color:var(--silver);" id="hero-pprice"></p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section style="padding:5rem 0 3rem;">
+  <div class="page-wrap">
+    <div class="section-head">
+      <h2>NEW <em>DROPS</em></h2>
+      <a href="shop.html">VIEW ALL →</a>
+    </div>
+    <div class="products-grid" id="featured-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:3rem;"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DROP BANNER -->
+<div class="page-wrap">
+  <div class="drop-banner" style="display:grid;grid-template-columns:1fr 400px;min-height:320px;border:1px solid var(--border2);overflow:hidden;margin:2rem 0 5rem;">
+    <div style="padding:3rem;display:flex;flex-direction:column;justify-content:center;gap:1.2rem;background:var(--bg2);">
+      <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.35em;color:var(--blue);">// LIMITED COLLAB</p>
+      <h2 style="font-family:var(--font-head);font-size:clamp(36px,5vw,56px);letter-spacing:0.06em;line-height:1;">HIGH-TOP<br><span style="color:var(--blue);">COLLAB OG</span></h2>
+      <p style="font-size:13px;color:var(--silver);line-height:1.8;max-width:380px;letter-spacing:0.04em;">Only 25 pairs. Full-grain leather, embossed KIKS.EXE branding, numbered tag. Once gone — gone forever.</p>
+      <button class="btn-primary" onclick="location.href='shop.html?badge=Ltd'" style="font-size:16px;width:fit-content;">GET YOURS →</button>
+    </div>
+    <div style="background:var(--bg3);position:relative;overflow:hidden;cursor:pointer;" onclick="location.href='shop.html?badge=Ltd'">
+      <img src="https://images.pexels.com/photos/12689693/pexels-photo-12689693.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop"
+        alt="KIKS.EXE Collab Drop" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center;transition:transform 0.5s;">
+      <div style="position:absolute;top:1.5rem;left:1.5rem;background:var(--red);padding:10px 16px;z-index:2;">
+        <span style="font-family:var(--font-head);font-size:28px;color:#fff;display:block;line-height:1;">25</span>
+        <span style="font-family:var(--font-head);font-size:9px;letter-spacing:0.2em;color:#fff;">PAIRS LEFT</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section style="padding:0 0 5rem;">
+  <div class="page-wrap">
+    <div class="section-head" style="margin-bottom:1.5rem;">
+      <h2>SHOP BY <em>CATEGORY</em></h2>
+      <a href="shop.html">BROWSE ALL →</a>
+    </div>
+    <div class="cat-grid-kiks" style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
+      <a href="shop.html?category=Sneakers" style="text-decoration:none;aspect-ratio:2/3;position:relative;overflow:hidden;background:var(--bg3);border:1px solid var(--border2);transition:border-color 0.3s,transform 0.3s;display:block;" onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border2)';this.style.transform='translateY(0)'">
+        <img src="https://images.pexels.com/photos/12628400/pexels-photo-12628400.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop" alt="Sneakers" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,15,0.95) 0%,rgba(6,6,15,0.2) 60%,transparent 100%);"></div>
+        <div style="position:absolute;bottom:1rem;left:1rem;"><p style="font-family:var(--font-head);font-size:9px;letter-spacing:0.25em;color:var(--blue);margin-bottom:2px;">FOOTWEAR</p><p style="font-family:var(--font-head);font-size:20px;letter-spacing:0.1em;color:#fff;">SNEAKERS</p></div>
+      </a>
+      <a href="shop.html?category=Hoodies" style="text-decoration:none;aspect-ratio:2/3;position:relative;overflow:hidden;background:var(--bg3);border:1px solid var(--border2);transition:border-color 0.3s,transform 0.3s;display:block;" onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border2)';this.style.transform='translateY(0)'">
+        <img src="https://images.pexels.com/photos/1816870/pexels-photo-1816870.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop" alt="Hoodies" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,15,0.95) 0%,rgba(6,6,15,0.2) 60%,transparent 100%);"></div>
+        <div style="position:absolute;bottom:1rem;left:1rem;"><p style="font-family:var(--font-head);font-size:9px;letter-spacing:0.25em;color:var(--blue);margin-bottom:2px;">APPAREL</p><p style="font-family:var(--font-head);font-size:20px;letter-spacing:0.1em;color:#fff;">HOODIES</p></div>
+      </a>
+      <a href="shop.html?category=Caps" style="text-decoration:none;aspect-ratio:2/3;position:relative;overflow:hidden;background:var(--bg3);border:1px solid var(--border2);transition:border-color 0.3s,transform 0.3s;display:block;" onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border2)';this.style.transform='translateY(0)'">
+        <img src="https://images.pexels.com/photos/4621424/pexels-photo-4621424.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop" alt="Caps" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,15,0.95) 0%,rgba(6,6,15,0.2) 60%,transparent 100%);"></div>
+        <div style="position:absolute;bottom:1rem;left:1rem;"><p style="font-family:var(--font-head);font-size:9px;letter-spacing:0.25em;color:var(--blue);margin-bottom:2px;">HEADWEAR</p><p style="font-family:var(--font-head);font-size:20px;letter-spacing:0.1em;color:#fff;">CAPS</p></div>
+      </a>
+      <a href="shop.html?category=Bottoms" style="text-decoration:none;aspect-ratio:2/3;position:relative;overflow:hidden;background:var(--bg3);border:1px solid var(--border2);transition:border-color 0.3s,transform 0.3s;display:block;" onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border2)';this.style.transform='translateY(0)'">
+        <img src="https://images.pexels.com/photos/19461553/pexels-photo-19461553.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop" alt="Bottoms" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,15,0.95) 0%,rgba(6,6,15,0.2) 60%,transparent 100%);"></div>
+        <div style="position:absolute;bottom:1rem;left:1rem;"><p style="font-family:var(--font-head);font-size:9px;letter-spacing:0.25em;color:var(--blue);margin-bottom:2px;">BOTTOMS</p><p style="font-family:var(--font-head);font-size:20px;letter-spacing:0.1em;color:#fff;">PANTS</p></div>
+      </a>
+      <a href="shop.html?category=Collab" style="text-decoration:none;aspect-ratio:2/3;position:relative;overflow:hidden;background:var(--bg3);border:1px solid var(--border2);transition:border-color 0.3s,transform 0.3s;display:block;" onmouseover="this.style.borderColor='var(--red)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border2)';this.style.transform='translateY(0)'">
+        <img src="https://images.pexels.com/photos/14910512/pexels-photo-14910512.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop" alt="Collab" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,15,0.95) 0%,rgba(6,6,15,0.2) 60%,transparent 100%);"></div>
+        <div style="position:absolute;top:0.8rem;right:0.8rem;background:var(--red);padding:3px 10px;"><p style="font-family:var(--font-head);font-size:9px;letter-spacing:0.2em;color:#fff;">LIMITED</p></div>
+        <div style="position:absolute;bottom:1rem;left:1rem;"><p style="font-family:var(--font-head);font-size:9px;letter-spacing:0.25em;color:var(--red);margin-bottom:2px;">EXCLUSIVE</p><p style="font-family:var(--font-head);font-size:20px;letter-spacing:0.1em;color:#fff;">COLLAB</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">KIKS<span>.EXE</span></div>
+      <p>Drop. Wear. Repeat. Premium sneakers and streetwear for the sole obsessed.</p>
+    </div>
+    <div class="footer-col"><h4>SHOP</h4><ul>
+      <li onclick="location.href='shop.html?category=Sneakers'">Sneakers</li>
+      <li onclick="location.href='shop.html?category=Hoodies'">Hoodies</li>
+      <li onclick="location.href='shop.html?category=Caps'">Caps</li>
+      <li onclick="location.href='shop.html?category=Collab'">Collabs</li>
+    </ul></div>
+    <div class="footer-col"><h4>ORDERS</h4><ul>
+      <li>Shipping Policy</li>
+      <li>Returns</li>
+      <li>Size Guide</li>
+      <li onclick="location.href='account.html'">Track Order</li>
+    </ul></div>
+    <div class="footer-col"><h4>INFO</h4><ul>
+      <li>About KIKS</li>
+      <li>Drop Calendar</li>
+      <li>Collab Program</li>
+      <li>Contact</li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 KIKS.EXE — All rights reserved</span>
+    <span>Drop. Wear. Repeat.</span>
+  </div>
+</footer>
+<script src="/app.js"></script>
+<script>
+function startCountdown() {
+  const end = new Date(Date.now() + 47*3600*1000 + 32*60*1000);
+  function update() {
+    const d = Math.max(0, end - Date.now());
+    const units = [
+      [Math.floor(d/3600000), 'HRS'],
+      [Math.floor(d%3600000/60000), 'MIN'],
+      [Math.floor(d%60000/1000), 'SEC'],
+    ];
+    document.getElementById('hero-countdown').innerHTML = units.map(([n,l]) => `
+      <div style="text-align:center;">
+        <div style="font-family:var(--font-head);font-size:48px;color:var(--blue);line-height:1;min-width:64px;">${String(n).padStart(2,'0')}</div>
+        <div style="font-family:var(--font-head);font-size:10px;letter-spacing:0.25em;color:var(--muted);">${l}</div>
+      </div>`).join('<div style="font-family:var(--font-head);font-size:36px;color:var(--border);padding-top:4px;">:</div>');
+  }
+  update(); setInterval(update, 1000);
+}
+startCountdown();
+
+async function loadHome() {
+  try {
+    const data = await API.get('/api/products?featured=true&limit=4');
+    const prods = data.products || [];
+    if (prods.length) {
+      const p = prods[0];
+      document.getElementById('hero-pname').textContent = p.name;
+      document.getElementById('hero-pprice').textContent = '₹' + p.price.toLocaleString('en-IN');
+      const heroDiv = document.getElementById('hero-img');
+      if (p.imageUrl) {
+        const img = document.createElement('img');
+        img.src = p.imageUrl;
+        img.alt = p.name;
+        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.5s;';
+        heroDiv.insertBefore(img, heroDiv.firstChild);
+        heroDiv.onmouseover = () => { img.style.transform = 'scale(1.03)'; };
+        heroDiv.onmouseout  = () => { img.style.transform = 'scale(1)'; };
+      }
+    }
+    window._productCache = window._productCache || {};
+    prods.forEach(p => window._productCache[p._id] = p);
+    const grid = document.getElementById('featured-grid');
+    grid.innerHTML = prods.length
+      ? prods.map(p => renderProductCard(p)).join('')
+      : '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted);">Run <code>npm run seed</code> to populate products.</div>';
+  } catch(e) { console.error(e); }
+}
+loadHome();
+updateCartCount();
+</script>
+</body>
+</html>

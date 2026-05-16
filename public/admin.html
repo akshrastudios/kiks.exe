@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KIKS.EXE — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+/* Admin-specific overrides */
+body { overflow-x: hidden; }
+.admin-section-title { font-size: clamp(28px,4vw,40px); }
+.form-select {
+  background: var(--bg3); border: 1px solid var(--border2); color: var(--text);
+  font-family: var(--font-body); font-size: 13px; padding: 10px 12px;
+  outline: none; transition: border-color 0.25s; width: 100%; cursor: pointer;
+}
+.form-select:focus { border-color: var(--blue); }
+.promo-badge {
+  font-family: var(--font-head); font-size: 11px; letter-spacing: 0.15em;
+  padding: 3px 10px; border: 1px solid var(--blue); color: var(--blue);
+}
+#sidebar-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 298; display: none;
+}
+</style>
+</head>
+<body>
+
+<!-- ADMIN NAV -->
+<nav style="background:var(--bg2);border-bottom:1px solid var(--border2);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:300;">
+  <a href="/" style="font-family:var(--font-head);font-size:22px;letter-spacing:0.2em;color:var(--text);text-decoration:none;">KIKS<span style="color:var(--blue);">.EXE</span></a>
+  <div style="display:flex;align-items:center;gap:1.5rem;">
+    <a href="/" style="font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'">← STORE</a>
+    <span style="font-family:var(--font-head);font-size:12px;letter-spacing:0.2em;color:var(--blue);">ADMIN</span>
+    <button id="admin-hamburger" onclick="window.adminToggleSidebar()" style="display:none;background:none;border:1px solid var(--border2);color:var(--blue);font-family:var(--font-head);font-size:12px;letter-spacing:0.12em;padding:6px 12px;cursor:pointer;">☰ MENU</button>
+  </div>
+</nav>
+
+<div id="sidebar-overlay" onclick="window.adminToggleSidebar()"></div>
+
+<!-- LAYOUT -->
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <p class="admin-sidebar-title">// ADMIN PANEL</p>
+    <button class="admin-nav-item active" onclick="switchTab('dashboard',this)"><span class="icon">📊</span>Dashboard</button>
+    <button class="admin-nav-item" onclick="switchTab('products',this)"><span class="icon">👟</span>Products</button>
+    <button class="admin-nav-item" onclick="switchTab('orders',this)"><span class="icon">📦</span>Orders</button>
+    <button class="admin-nav-item" onclick="switchTab('users',this)"><span class="icon">👥</span>Users</button>
+    <button class="admin-nav-item" onclick="switchTab('promos',this)"><span class="icon">🏷</span>Promo Codes</button>
+    <div style="margin-top:auto;padding-top:1rem;">
+      <button class="admin-nav-item" style="color:var(--dark-red);border-left-color:transparent;" onclick="handleLogout()"><span class="icon">↩</span>Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <!-- DASHBOARD -->
+    <div class="admin-section active" id="admin-dashboard">
+      <h2 class="admin-section-title">DASHBOARD</h2>
+      <p class="admin-section-sub">Welcome back, <span id="admin-name">Admin</span></p>
+      <div class="stats-grid">
+        <div class="stat-card blue"><p class="stat-label">TOTAL REVENUE</p><p class="stat-value" id="stat-revenue">—</p></div>
+        <div class="stat-card red"><p class="stat-label">TOTAL ORDERS</p><p class="stat-value" id="stat-orders">—</p></div>
+        <div class="stat-card cyan"><p class="stat-label">PRODUCTS</p><p class="stat-value" id="stat-products-a">—</p></div>
+        <div class="stat-card green"><p class="stat-label">CUSTOMERS</p><p class="stat-value" id="stat-users-a">—</p></div>
+      </div>
+      <h3 style="font-family:var(--font-head);font-size:20px;letter-spacing:0.1em;margin-bottom:1rem;">RECENT ORDERS</h3>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ORDER #</th><th>CUSTOMER</th><th>TOTAL</th><th>STATUS</th><th>DATE</th></tr></thead>
+          <tbody id="recent-orders-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="admin-section" id="admin-products">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1rem;">
+        <div><h2 class="admin-section-title">PRODUCTS</h2><p class="admin-section-sub">Manage your inventory</p></div>
+        <button class="btn-primary" onclick="openProductModal()" style="font-size:15px;">+ ADD PRODUCT</button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>IMAGE</th><th>NAME</th><th>CATEGORY</th><th>PRICE</th><th>STOCK</th><th>BADGE</th><th>ACTIONS</th></tr></thead>
+          <tbody id="products-tbody"><tr><td colspan="7" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="admin-section" id="admin-orders">
+      <h2 class="admin-section-title">ORDERS</h2>
+      <p class="admin-section-sub">All customer orders</p>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ORDER #</th><th>CUSTOMER</th><th>ITEMS</th><th>TOTAL</th><th>METHOD</th><th>STATUS</th><th>DATE</th><th>ACTIONS</th></tr></thead>
+          <tbody id="orders-tbody"><tr><td colspan="8" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="admin-section" id="admin-users">
+      <h2 class="admin-section-title">USERS</h2>
+      <p class="admin-section-sub">Registered customers</p>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>NAME</th><th>EMAIL</th><th>JOINED</th><th>ORDERS</th><th>ADMIN</th></tr></thead>
+          <tbody id="users-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PROMOS -->
+    <div class="admin-section" id="admin-promos">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1rem;">
+        <div><h2 class="admin-section-title">PROMO CODES</h2><p class="admin-section-sub">Manage discount codes</p></div>
+        <button class="btn-primary" onclick="openPromoModal()" style="font-size:15px;">+ ADD PROMO</button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>CODE</th><th>DISCOUNT</th><th>USES</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="promos-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="product-modal" style="display:none;" onclick="if(event.target===this)closeProductModal()">
+  <div class="modal">
+    <h3 class="modal-title" id="modal-title">ADD PRODUCT</h3>
+    <form class="admin-form" onsubmit="saveProduct(event)">
+      <input type="hidden" id="prod-id">
+      <div class="form-grid">
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Name *</label><input class="form-input" id="prod-name" required placeholder="Air Court Low"></div>
+        <div class="form-group"><label class="form-label">Category *</label>
+          <select class="form-select" id="prod-cat" required>
+            <option value="">Select category</option>
+            <option>Sneakers</option><option>Hoodies</option><option>Caps</option>
+            <option>Bottoms</option><option>Bags</option><option>Accessories</option><option>Collab</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Badge</label>
+          <select class="form-select" id="prod-badge">
+            <option value="">None</option>
+            <option value="New">New</option><option value="Hot">Hot</option>
+            <option value="Ltd">Ltd</option><option value="Sale">Sale</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Price (₹) *</label><input class="form-input" id="prod-price" type="number" required placeholder="8999" min="0"></div>
+        <div class="form-group"><label class="form-label">Original Price (₹)</label><input class="form-input" id="prod-orig-price" type="number" placeholder="Leave blank if no sale" min="0"></div>
+        <div class="form-group"><label class="form-label">Stock *</label><input class="form-input" id="prod-stock" type="number" required placeholder="50" min="0"></div>
+        <div class="form-group"><label class="form-label">Art Class</label>
+          <select class="form-select" id="prod-art">
+            <option value="art-1">Art 1 (Blue)</option><option value="art-2">Art 2 (Red)</option>
+            <option value="art-3">Art 3 (Cyan)</option><option value="art-4">Art 4 (Dark blue)</option>
+            <option value="art-5">Art 5 (Red/dark)</option><option value="art-6">Art 6 (Mixed)</option>
+            <option value="art-7">Art 7 (Cyan/dark)</option><option value="art-8">Art 8 (Red/mixed)</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Image URL</label><input class="form-input" id="prod-img" placeholder="https://images.pexels.com/..."></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Sizes (comma separated)</label><input class="form-input" id="prod-sizes" placeholder="UK6, UK7, UK8, UK9, UK10, UK11"></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Description</label><textarea class="form-textarea" id="prod-desc" rows="3" placeholder="Product description..."></textarea></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Features (comma separated)</label><input class="form-input" id="prod-features" placeholder="Air cushion, Premium leather, Grip outsole"></div>
+        <div class="form-group"><label class="form-label">Tag</label><input class="form-input" id="prod-tag" placeholder="SOLE OF THE WEEK"></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:1.2rem;">
+          <input type="checkbox" id="prod-featured" style="accent-color:var(--blue);width:16px;height:16px;">
+          <label class="form-label" style="margin:0;cursor:pointer;" for="prod-featured">Featured on homepage</label>
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;margin-top:1rem;">
+        <button type="submit" class="btn-primary" style="flex:1;font-size:16px;">SAVE PRODUCT</button>
+        <button type="button" class="btn-ghost" onclick="closeProductModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- PROMO MODAL -->
+<div class="modal-overlay" id="promo-modal" style="display:none;" onclick="if(event.target===this)closePromoModal()">
+  <div class="modal">
+    <h3 class="modal-title">ADD PROMO CODE</h3>
+    <form class="admin-form" onsubmit="savePromo(event)">
+      <div class="form-group"><label class="form-label">Code *</label><input class="form-input" id="promo-code" required placeholder="KIKS10" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>
+      <div class="form-group"><label class="form-label">Discount % *</label><input class="form-input" id="promo-pct" type="number" required placeholder="10" min="1" max="100"></div>
+      <div style="display:flex;gap:1rem;margin-top:1rem;">
+        <button type="submit" class="btn-primary" style="flex:1;font-size:16px;">CREATE CODE</button>
+        <button type="button" class="btn-ghost" onclick="closePromoModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ORDER STATUS MODAL -->
+<div class="modal-overlay" id="status-modal" style="display:none;" onclick="if(event.target===this)closeStatusModal()">
+  <div class="modal" style="max-width:380px;">
+    <h3 class="modal-title">UPDATE STATUS</h3>
+    <input type="hidden" id="status-order-id">
+    <div class="form-group" style="margin-bottom:1.5rem;">
+      <label class="form-label">Order Status</label>
+      <select class="form-select" id="status-select">
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="processing">Processing</option>
+        <option value="shipped">Shipped</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:1.5rem;">
+      <label class="form-label">Tracking Number</label>
+      <input class="form-input" id="tracking-input" placeholder="Optional tracking number">
+    </div>
+    <div style="display:flex;gap:1rem;">
+      <button class="btn-primary" onclick="saveStatus()" style="flex:1;font-size:16px;">UPDATE</button>
+      <button class="btn-ghost" onclick="closeStatusModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="toast-dot"></span><span class="toast-msg"></span></div>
+<script src="/app.js"></script>
+<script>
+// ── Admin Mobile Sidebar ──────────────────────────────────
+window.adminToggleSidebar = function() {
+  const sb  = document.getElementById('admin-sidebar');
+  const ov  = document.getElementById('sidebar-overlay');
+  const btn = document.getElementById('admin-hamburger');
+  const open = sb.classList.contains('sidebar-open');
+  if (open) {
+    sb.classList.remove('sidebar-open');
+    sb.style.transform = 'translateX(-100%)';
+    ov.style.display   = 'none';
+    if (btn) btn.textContent = '☰ MENU';
+  } else {
+    sb.classList.add('sidebar-open');
+    sb.style.transform = 'translateX(0)';
+    ov.style.display   = 'block';
+    if (btn) btn.textContent = '✕ CLOSE';
+  }
+};
+
+function initAdminMobile() {
+  const btn = document.getElementById('admin-hamburger');
+  if (!btn) return;
+  function check() {
+    const mobile = window.innerWidth <= 900;
+    if (btn) btn.style.display = mobile ? 'block' : 'none';
+    const sb = document.getElementById('admin-sidebar');
+    if (!mobile && sb) {
+      sb.style.transform = '';
+      sb.classList.remove('sidebar-open');
+      document.getElementById('sidebar-overlay').style.display = 'none';
+    } else if (mobile && sb && !sb.classList.contains('sidebar-open')) {
+      sb.style.transform = 'translateX(-100%)';
+    }
+  }
+  check();
+  window.addEventListener('resize', check);
+}
+
+// ── Auth ──────────────────────────────────────────────────
+function checkAdmin() {
+  if (!Auth.isAdmin()) {
+    location.href = '/account.html';
+    return false;
+  }
+  const u = Auth.getUser();
+  const el = document.getElementById('admin-name');
+  if (el) el.textContent = u.name || 'Admin';
+  return true;
+}
+
+function handleLogout() {
+  Auth.clearSession();
+  location.href = '/';
+}
+
+// ── Tab Switching ─────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('admin-' + tab).classList.add('active');
+  if (tab === 'dashboard') loadDashboard();
+  else if (tab === 'products') loadProducts();
+  else if (tab === 'orders')   loadOrders();
+  else if (tab === 'users')    loadUsers();
+  else if (tab === 'promos')   loadPromos();
+  // Close mobile sidebar after selecting
+  if (window.innerWidth <= 900) window.adminToggleSidebar();
+}
+
+// ── Dashboard ─────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const stats = await API.get('/api/admin/stats');
+    document.getElementById('stat-revenue').textContent   = '₹' + (stats.totalRevenue || 0).toLocaleString('en-IN');
+    document.getElementById('stat-orders').textContent    = stats.totalOrders  || 0;
+    document.getElementById('stat-products-a').textContent = stats.totalProducts || 0;
+    document.getElementById('stat-users-a').textContent   = stats.totalUsers   || 0;
+    const tbody = document.getElementById('recent-orders-tbody');
+    if (!stats.recentOrders?.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--muted)">No orders yet</td></tr>'; return; }
+    tbody.innerHTML = stats.recentOrders.map(o => `<tr>
+      <td><span class="order-link">${o.orderNumber}</span></td>
+      <td>${o.user?.name || 'Guest'}</td>
+      <td><strong>₹${(o.total||0).toLocaleString('en-IN')}</strong></td>
+      <td><span class="status-badge status-${o.status}">${(o.status||'').toUpperCase()}</span></td>
+      <td style="color:var(--muted)">${new Date(o.createdAt).toLocaleDateString('en-IN')}</td>
+    </tr>`).join('');
+  } catch(err) {
+    document.getElementById('recent-orders-tbody').innerHTML = '<tr><td colspan="5" style="color:var(--dark-red);padding:1rem">' + err.message + '</td></tr>';
+  }
+}
+
+// ── Products ──────────────────────────────────────────────
+async function loadProducts() {
+  const tbody = document.getElementById('products-tbody');
+  try {
+    const data = await API.get('/api/admin/products');
+    if (!data.products?.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:var(--muted)">No products. Run npm run seed.</td></tr>'; return; }
+    tbody.innerHTML = data.products.map(p => `<tr>
+      <td><div style="width:40px;height:54px;overflow:hidden;background:var(--bg3);border:1px solid var(--border2);">${p.imageUrl ? '<img src="' + p.imageUrl + '" style="width:100%;height:100%;object-fit:cover;object-position:center top;">' : '<div class="mini-art ' + (p.art||'art-1') + '" style="width:100%;height:100%;"></div>'}</div></td>
+      <td><strong>${p.name}</strong><br><span style="color:var(--muted);font-size:10px;">${p._id.slice(-6)}</span></td>
+      <td>${p.category}</td>
+      <td>₹${p.price.toLocaleString('en-IN')}${p.originalPrice ? '<br><span style="color:var(--muted);text-decoration:line-through;font-size:10px;">₹' + p.originalPrice.toLocaleString('en-IN') + '</span>' : ''}</td>
+      <td class="${p.stock < 10 ? 'stock-low' : ''}">${p.stock}</td>
+      <td>${p.badge ? '<span class="promo-badge">' + p.badge + '</span>' : '<span style="color:var(--muted2)">—</span>'}</td>
+      <td>
+        <button class="act-btn" onclick="editProduct('${p._id}')">Edit</button>
+        <button class="act-btn del" onclick="deleteProduct('${p._id}','${p.name}')">Delete</button>
+      </td>
+    </tr>`).join('');
+  } catch(err) { tbody.innerHTML = '<tr><td colspan="7" style="color:var(--dark-red);padding:1rem">' + err.message + '</td></tr>'; }
+}
+
+// Product modal
+function openProductModal(fill) {
+  document.getElementById('modal-title').textContent = fill ? 'EDIT PRODUCT' : 'ADD PRODUCT';
+  document.getElementById('prod-id').value = fill?._id || '';
+  document.getElementById('prod-name').value = fill?.name || '';
+  document.getElementById('prod-cat').value = fill?.category || '';
+  document.getElementById('prod-badge').value = fill?.badge || '';
+  document.getElementById('prod-price').value = fill?.price || '';
+  document.getElementById('prod-orig-price').value = fill?.originalPrice || '';
+  document.getElementById('prod-stock').value = fill?.stock || '';
+  document.getElementById('prod-art').value = fill?.art || 'art-1';
+  document.getElementById('prod-img').value = fill?.imageUrl || '';
+  document.getElementById('prod-sizes').value = fill?.sizes?.join(', ') || '';
+  document.getElementById('prod-desc').value = fill?.description || '';
+  document.getElementById('prod-features').value = fill?.features?.join(', ') || '';
+  document.getElementById('prod-tag').value = fill?.tag || '';
+  document.getElementById('prod-featured').checked = fill?.isFeatured || false;
+  document.getElementById('product-modal').style.display = 'flex';
+}
+function closeProductModal() { document.getElementById('product-modal').style.display = 'none'; }
+
+async function editProduct(id) {
+  try {
+    const data = await API.get('/api/products/' + id);
+    openProductModal(data.product);
+  } catch(err) { showToast(err.message, 'error'); }
+}
+
+async function saveProduct(e) {
+  e.preventDefault();
+  const id = document.getElementById('prod-id').value;
+  const body = {
+    name: document.getElementById('prod-name').value,
+    category: document.getElementById('prod-cat').value,
+    badge: document.getElementById('prod-badge').value || null,
+    price: Number(document.getElementById('prod-price').value),
+    originalPrice: Number(document.getElementById('prod-orig-price').value) || null,
+    stock: Number(document.getElementById('prod-stock').value),
+    art: document.getElementById('prod-art').value,
+    imageUrl: document.getElementById('prod-img').value,
+    sizes: document.getElementById('prod-sizes').value.split(',').map(s => s.trim()).filter(Boolean),
+    description: document.getElementById('prod-desc').value,
+    features: document.getElementById('prod-features').value.split(',').map(s => s.trim()).filter(Boolean),
+    tag: document.getElementById('prod-tag').value,
+    isFeatured: document.getElementById('prod-featured').checked,
+  };
+  try {
+    if (id) await API.put('/api/admin/products/' + id, body);
+    else await API.post('/api/admin/products', body);
+    closeProductModal();
+    showToast(id ? 'Product updated!' : 'Product created!');
+    loadProducts();
+  } catch(err) { showToast(err.message, 'error'); }
+}
+
+async function deleteProduct(id, name) {
+  if (!confirm('Delete "' + name + '"? This cannot be undone.')) return;
+  try {
+    await API.delete('/api/admin/products/' + id);
+    showToast('Product deleted');
+    loadProducts();
+  } catch(err) { showToast(err.message, 'error'); }
+}
+
+// ── Orders ────────────────────────────────────────────────
+async function loadOrders() {
+  const tbody = document.getElementById('orders-tbody');
+  try {
+    const data = await API.get('/api/admin/orders');
+    if (!data.orders?.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:1.5rem;color:var(--muted)">No orders yet</td></tr>'; return; }
+    tbody.innerHTML = data.orders.map(o => `<tr>
+      <td><span class="order-link">${o.orderNumber}</span></td>
+      <td>${o.user?.name || 'Guest'}<br><span style="color:var(--muted);font-size:10px;">${o.user?.email || ''}</span></td>
+      <td>${o.items.length} item${o.items.length > 1 ? 's' : ''}</td>
+      <td><strong>₹${(o.total||0).toLocaleString('en-IN')}</strong></td>
+      <td style="color:var(--muted)">${o.paymentMethod || '—'}</td>
+      <td><span class="status-badge status-${o.status}">${(o.status||'').toUpperCase()}</span></td>
+      <td style="color:var(--muted)">${new Date(o.createdAt).toLocaleDateString('en-IN')}</td>
+      <td><button class="act-btn" onclick="openStatusModal('${o._id}','${o.status}','${o.trackingNumber||''}')">Update</button></td>
+    </tr>`).join('');
+  } catch(err) { tbody.innerHTML = '<tr><td colspan="8" style="color:var(--dark-red);padding:1rem">' + err.message + '</td></tr>'; }
+}
+
+function openStatusModal(orderId, status, tracking) {
+  document.getElementById('status-order-id').value = orderId;
+  document.getElementById('status-select').value = status;
+  document.getElementById('tracking-input').value = tracking || '';
+  document.getElementById('status-modal').style.display = 'flex';
+}
+function closeStatusModal() { document.getElementById('status-modal').style.display = 'none'; }
+
+async function saveStatus() {
+  const id       = document.getElementById('status-order-id').value;
+  const status   = document.getElementById('status-select').value;
+  const tracking = document.getElementById('tracking-input').value.trim();
+  try {
+    await API.put('/api/admin/orders/' + id, { status, trackingNumber: tracking || undefined });
+    closeStatusModal();
+    showToast('Order updated!');
+    loadOrders();
+  } catch(err) { showToast(err.message, 'error'); }
+}
+
+// ── Users ─────────────────────────────────────────────────
+async function loadUsers() {
+  const tbody = document.getElementById('users-tbody');
+  try {
+    const data = await API.get('/api/admin/users');
+    if (!data.users?.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--muted)">No users yet</td></tr>'; return; }
+    tbody.innerHTML = data.users.map(u => `<tr>
+      <td><strong>${u.name}</strong></td>
+      <td style="color:var(--muted)">${u.email}</td>
+      <td style="color:var(--muted)">${new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
+      <td>${u.orderCount || 0}</td>
+      <td>${u.isAdmin ? '<span class="status-badge status-confirmed">ADMIN</span>' : '<span style="color:var(--muted2)">—</span>'}</td>
+    </tr>`).join('');
+  } catch(err) { tbody.innerHTML = '<tr><td colspan="5" style="color:var(--dark-red);padding:1rem">' + err.message + '</td></tr>'; }
+}
+
+// ── Promos ────────────────────────────────────────────────
+async function loadPromos() {
+  const tbody = document.getElementById('promos-tbody');
+  try {
+    const data = await API.get('/api/admin/promos');
+    if (!data.promos?.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--muted)">No promo codes. Run npm run seed.</td></tr>'; return; }
+    tbody.innerHTML = data.promos.map(p => `<tr>
+      <td><span class="promo-badge">${p.code}</span></td>
+      <td><strong style="color:var(--blue)">${p.discountPct}% OFF</strong></td>
+      <td style="color:var(--muted)">${p.usedCount || 0}</td>
+      <td><span class="status-badge ${p.isActive ? 'status-delivered' : 'status-cancelled'}">${p.isActive ? 'ACTIVE' : 'DISABLED'}</span></td>
+      <td>
+        <button class="act-btn" onclick="togglePromo('${p._id}',${p.isActive})">${p.isActive ? 'Disable' : 'Enable'}</button>
+        <button class="act-btn del" onclick="deletePromo('${p._id}','${p.code}')">Delete</button>
+      </td>
+    </tr>`).join('');
+  } catch(err) { tbody.innerHTML = '<tr><td colspan="5" style="color:var(--dark-red);padding:1rem">' + err.message + '</td></tr>'; }
+}
+
+function openPromoModal() { document.getElementById('promo-modal').style.display = 'flex'; }
+function closePromoModal() { document.getElementById('promo-modal').style.display = 'none'; document.getElementById('promo-code').value = ''; document.getElementById('promo-pct').value = ''; }
+
+async function savePromo(e) {
+  e.preventDefault();
+  const code = document.getElementById('promo-code').value.trim().toUpperCase();
+  const pct  = Number(document.getElementById('promo-pct').value);
+  if (!code || !pct) { showToast('Please fill both fields', 'error'); return; }
+  try {
+    await API.post('/api/admin/promos', { code, discountPct: pct });
+    closePromoModal();
+    showToast('Promo code created!');
+    loadPromos();
+  } catch(err) { showToast(err.message, 'error'); }
+}
+
+async function togglePromo(id, isActive) {
+  try {
+    await API.put('/api/admin/promos/' + id, { isActive: !isActive });
+    showToast(isActive ? 'Promo disabled' : 'Promo enabled');
+    loadPromos();
+  } catch(err) { showToast(err.message, 'error'); }
+}
+
+async function deletePromo(id, code) {
+  if (!confirm('Delete promo code ' + code + '?')) return;
+  try {
+    await API.delete('/api/admin/promos/' + id);
+    showToast('Promo deleted');
+    loadPromos();
+  } catch(err) { showToast(err.message, 'error'); }
+}
+
+// ── Init ──────────────────────────────────────────────────
+if (checkAdmin()) {
+  loadDashboard();
+  initAdminMobile();
+}
+</script>
+</body>
+</html>

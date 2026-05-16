@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KIKS.EXE — Account</title>
+<meta name="description" content="KIKS.EXE — Drop. Wear. Repeat. Premium sneakers and streetwear.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+
+</head>
+<body>
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">New Drops Every Friday</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Free Shipping Above ₹5,000</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Limited Releases</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Exclusive Collabs</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Sole Society</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">New Drops Every Friday</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Free Shipping Above ₹5,000</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Limited Releases</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Exclusive Collabs</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Sole Society</span><span class="ticker-dot">·</span>
+  </div>
+</div>
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">KIKS<span>.EXE</span></a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">HOME</a>
+      <a href="shop.html" class="nav-link">SHOP</a>
+      <a href="shop.html?category=Sneakers" class="nav-link">SNEAKERS</a>
+      <a href="shop.html?category=Hoodies" class="nav-link">HOODIES</a>
+      <a href="shop.html?category=Collab" class="nav-link">COLLABS</a>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-hamburger" onclick="openMobileNav()" aria-label="Menu">☰</button>
+      <button class="nav-search" onclick="toggleSearch()" aria-label="Search">⌕</button>
+      <button class="nav-icon-btn" onclick="location.href='account.html'" aria-label="Account">◯</button>
+      <button class="nav-cart-btn" onclick="location.href='cart.html'">BAG <span class="cart-count" id="cart-count">0</span></button>
+    </div>
+  </div>
+  <div class="search-bar" id="search-bar">
+    <input type="text" placeholder="Search drops, brands, styles..." id="search-input" onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="btn-ghost" onclick="doSearch()">SEARCH →</button>
+    <button class="btn-ghost" onclick="toggleSearch()">✕</button>
+  </div>
+</nav>
+<div class="mobile-drawer" id="mobile-drawer">
+  <button class="drawer-close" onclick="closeMobileNav()">✕</button>
+  <a href="/" onclick="closeMobileNav()">HOME</a>
+  <a href="shop.html" onclick="closeMobileNav()">SHOP</a>
+  <a href="shop.html?category=Sneakers" onclick="closeMobileNav()">SNEAKERS</a>
+  <a href="shop.html?category=Hoodies" onclick="closeMobileNav()">HOODIES</a>
+  <a href="shop.html?category=Collab" onclick="closeMobileNav()">COLLABS</a>
+  <a href="account.html" onclick="closeMobileNav()">ACCOUNT</a>
+  <a href="cart.html" onclick="closeMobileNav()">BAG</a>
+</div>
+<div class="toast" id="toast"><span class="toast-dot"></span><span class="toast-msg"></span></div>
+<div class="page-wrap">
+  <div class="page-hero">
+    <p class="page-hero-label">My Account</p>
+    <h1>YOUR <em>ACCOUNT</em></h1>
+    <span class="page-hero-bg" aria-hidden="true">ACCOUNT</span>
+  </div>
+  <div class="account-wrap">
+    <!-- NOT LOGGED IN -->
+    <div id="auth-view" style="display:none;">
+      <div class="auth-container">
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchAuthTab('login',this)">SIGN IN</button>
+          <button class="auth-tab" onclick="switchAuthTab('register',this)">CREATE ACCOUNT</button>
+        </div>
+        <div class="auth-panel active" id="auth-login">
+          <h2 class="auth-title">WELCOME <em>BACK</em></h2>
+          <p class="auth-sub">Sign in to access your orders, wishlist, and saved addresses.</p>
+          <form class="auth-form" onsubmit="handleLogin(event)">
+            <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input type="email" class="form-input" id="login-email" placeholder="you@kiks.exe" required></div>
+            <div class="form-group">
+              <label class="form-label" style="display:flex;justify-content:space-between;">Password <span class="req">*</span><a href="#" onclick="showForgotMsg(event)" style="color:var(--blue);font-size:10px;letter-spacing:0.08em;">Forgot?</a></label>
+              <input type="password" class="form-input" id="login-password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary" id="login-btn" style="width:100%;font-size:18px;">SIGN IN</button>
+          </form>
+          <div class="auth-divider">or</div>
+          <p style="font-size:12px;text-align:center;color:var(--muted);">Don't have an account? <a href="#" onclick="switchAuthTab('register')" style="color:var(--blue);">Create one →</a></p>
+        </div>
+        <div class="auth-panel" id="auth-register">
+          <h2 class="auth-title">JOIN <em>KIKS</em></h2>
+          <p class="auth-sub">Create your account to track orders, save your wishlist, and checkout faster.</p>
+          <form class="auth-form" onsubmit="handleRegister(event)">
+            <div class="form-group"><label class="form-label">Full Name <span class="req">*</span></label><input type="text" class="form-input" id="reg-name" placeholder="Your name" required></div>
+            <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input type="email" class="form-input" id="reg-email" placeholder="you@kiks.exe" required></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="reg-phone" placeholder="+91 98765 43210"></div>
+            <div class="form-group"><label class="form-label">Password <span class="req">*</span></label><input type="password" class="form-input" id="reg-password" placeholder="Min 6 characters" required></div>
+            <button type="submit" class="btn-primary" id="reg-btn" style="width:100%;font-size:18px;">CREATE ACCOUNT</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- LOGGED IN -->
+    <div id="profile-view" style="display:none;">
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <div class="profile-avatar" id="profile-avatar">KK</div>
+          <p class="profile-name" id="profile-name">—</p>
+          <p class="profile-email" id="profile-email">—</p>
+          <nav class="p-nav">
+            <button class="p-nav-btn active" onclick="switchProfileTab('orders',this)">📦 My Orders</button>
+            <button class="p-nav-btn" onclick="switchProfileTab('details',this)">✎ Profile</button>
+            <button class="p-nav-btn" onclick="switchProfileTab('security',this)">🔒 Password</button>
+            <button class="p-nav-btn p-nav-logout" onclick="handleLogout()">↩ Sign Out</button>
+          </nav>
+        </aside>
+        <div class="profile-content">
+          <div class="profile-section active" id="tab-orders">
+            <p class="profile-section-title">// MY ORDERS</p>
+            <div id="orders-list"><div style="text-align:center;padding:2rem;"><div class="spinner"></div></div></div>
+          </div>
+          <div class="profile-section" id="tab-details">
+            <p class="profile-section-title">// PROFILE DETAILS</p>
+            <form class="profile-form" onsubmit="handleProfileUpdate(event)">
+              <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="pf-name"></div>
+              <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="pf-email" readonly style="opacity:0.5;"></div>
+              <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="pf-phone"></div>
+              <button type="submit" class="btn-primary" style="font-size:16px;">SAVE CHANGES</button>
+            </form>
+          </div>
+          <div class="profile-section" id="tab-security">
+            <p class="profile-section-title">// CHANGE PASSWORD</p>
+            <form class="profile-form" onsubmit="handlePasswordChange(event)">
+              <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-input" id="pf-cur-pass" placeholder="Current password"></div>
+              <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="pf-new-pass" placeholder="New password (min 6 chars)"></div>
+              <div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-input" id="pf-conf-pass" placeholder="Confirm new password"></div>
+              <button type="submit" class="btn-primary" style="font-size:16px;">UPDATE PASSWORD</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">KIKS<span>.EXE</span></div>
+      <p>Drop. Wear. Repeat. Premium sneakers and streetwear for the sole obsessed.</p>
+    </div>
+    <div class="footer-col"><h4>SHOP</h4><ul>
+      <li onclick="location.href='shop.html?category=Sneakers'">Sneakers</li>
+      <li onclick="location.href='shop.html?category=Hoodies'">Hoodies</li>
+      <li onclick="location.href='shop.html?category=Caps'">Caps</li>
+      <li onclick="location.href='shop.html?category=Collab'">Collabs</li>
+    </ul></div>
+    <div class="footer-col"><h4>ORDERS</h4><ul>
+      <li>Shipping Policy</li>
+      <li>Returns</li>
+      <li>Size Guide</li>
+      <li onclick="location.href='account.html'">Track Order</li>
+    </ul></div>
+    <div class="footer-col"><h4>INFO</h4><ul>
+      <li>About KIKS</li>
+      <li>Drop Calendar</li>
+      <li>Collab Program</li>
+      <li>Contact</li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 KIKS.EXE — All rights reserved</span>
+    <span>Drop. Wear. Repeat.</span>
+  </div>
+</footer>
+<script src="/app.js"></script>
+<script>
+function showForgotMsg(e){e.preventDefault();showToast('Password reset: contact support@kiks-exe.com with your registered email.');}
+
+function switchAuthTab(tab,btn){
+  document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.auth-panel').forEach(p=>p.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  else document.querySelectorAll('.auth-tab')[tab==='register'?1:0].classList.add('active');
+  document.getElementById('auth-'+tab).classList.add('active');
+}
+function switchProfileTab(tab,btn){
+  document.querySelectorAll('.p-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.profile-section').forEach(s=>s.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='orders')loadOrders();
+}
+function renderPage(){
+  if(Auth.isLoggedIn()){
+    document.getElementById('auth-view').style.display='none';
+    document.getElementById('profile-view').style.display='block';
+    const u=Auth.getUser();
+    const initials=u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('profile-avatar').textContent=initials;
+    document.getElementById('profile-name').textContent=u.name;
+    document.getElementById('profile-email').textContent=u.email;
+    document.getElementById('pf-name').value=u.name;
+    document.getElementById('pf-email').value=u.email;
+    loadOrders();
+  }else{
+    document.getElementById('auth-view').style.display='block';
+    document.getElementById('profile-view').style.display='none';
+  }
+}
+async function handleLogin(e){
+  e.preventDefault();
+  const btn=document.getElementById('login-btn');
+  btn.textContent='SIGNING IN...';btn.disabled=true;
+  try{
+    const guestCart=GuestCart.get().map(i=>{return{product:i.product,name:i.name,price:i.price,art:i.art,imageUrl:i.imageUrl||'',category:i.category,size:i.size,qty:i.qty}});
+    const data=await API.post('/api/auth/login',{
+      email:document.getElementById('login-email').value,
+      password:document.getElementById('login-password').value,
+      guestCart,
+    });
+    Auth.setSession(data.token,data.user);
+    GuestCart.clear();
+    const guestWish=WishList.get();
+    if(guestWish.length)localStorage.setItem('kiks_wish',JSON.stringify([...new Set([...guestWish])]));
+    showToast('Welcome back, '+data.user.name.split(' ')[0]+'!');
+    setTimeout(()=>{location.href=data.user.isAdmin?'/admin.html':'/';},1200);
+  }catch(err){
+    showToast(err.message,'error');btn.textContent='SIGN IN';btn.disabled=false;
+  }
+}
+async function handleRegister(e){
+  e.preventDefault();
+  const pass=document.getElementById('reg-password').value;
+  if(pass.length<6){showToast('Password must be at least 6 characters','error');return;}
+  const btn=document.getElementById('reg-btn');
+  btn.textContent='CREATING...';btn.disabled=true;
+  try{
+    const guestCart=GuestCart.get().map(i=>{return{product:i.product,name:i.name,price:i.price,art:i.art,imageUrl:i.imageUrl||'',category:i.category,size:i.size,qty:i.qty}});
+    const data=await API.post('/api/auth/register',{
+      name:document.getElementById('reg-name').value,
+      email:document.getElementById('reg-email').value,
+      phone:document.getElementById('reg-phone').value,
+      password:pass,guestCart,
+    });
+    Auth.setSession(data.token,data.user);
+    GuestCart.clear();
+    showToast('Welcome to KIKS.EXE, '+data.user.name.split(' ')[0]+'!');
+    setTimeout(()=>{location.href='/';},1200);
+  }catch(err){
+    showToast(err.message,'error');btn.textContent='CREATE ACCOUNT';btn.disabled=false;
+  }
+}
+async function handleProfileUpdate(e){
+  e.preventDefault();
+  try{
+    const data=await API.put('/api/auth/profile',{name:document.getElementById('pf-name').value,phone:document.getElementById('pf-phone').value});
+    Auth.setSession(API.token,data.user);
+    document.getElementById('profile-name').textContent=data.user.name;
+    showToast('Profile updated!');
+  }catch(err){showToast(err.message,'error');}
+}
+async function handlePasswordChange(e){
+  e.preventDefault();
+  const np=document.getElementById('pf-new-pass').value;
+  const cp=document.getElementById('pf-conf-pass').value;
+  if(np!==cp){showToast('Passwords do not match','error');return;}
+  try{
+    await API.put('/api/auth/profile',{password:document.getElementById('pf-cur-pass').value,newPassword:np});
+    showToast('Password updated!');
+    ['pf-cur-pass','pf-new-pass','pf-conf-pass'].forEach(id=>{document.getElementById(id).value='';});
+  }catch(err){showToast(err.message,'error');}
+}
+function handleLogout(){
+  Auth.clearSession();showToast('Signed out');
+  setTimeout(()=>{location.href='/';},1000);
+}
+async function loadOrders(){
+  const container=document.getElementById('orders-list');
+  try{
+    const data=await API.get('/api/orders');
+    if(!data.orders.length){
+      container.innerHTML='<div class="empty-state"><div class="big-icon">📦</div><h3>NO ORDERS YET</h3><p>Your orders will appear here</p><a href="/shop.html" class="btn-primary" style="margin-top:1rem;display:inline-flex;">START SHOPPING</a></div>';
+      return;
+    }
+    container.innerHTML='<table class="orders-table"><thead><tr><th>Order #</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>'+
+      data.orders.map(o=>`<tr>
+        <td><span class="order-link">${o.orderNumber}</span></td>
+        <td style="color:var(--muted)">${new Date(o.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</td>
+        <td style="color:var(--muted)">${o.items.length} item${o.items.length>1?'s':''}</td>
+        <td><strong>₹${o.total.toLocaleString('en-IN')}</strong></td>
+        <td><span class="status-badge status-${o.status}">${o.status.toUpperCase()}</span></td>
+        <td><button class="order-expand" onclick="toggleOrderDetail(this,'${o._id}')">+ Details</button></td>
+      </tr>
+      <tr class="order-detail-row" id="detail-${o._id}" style="display:none;"><td colspan="6">
+        <div class="order-items-list">
+          ${o.items.map(i=>`<div class="order-item-row">
+            <div class="order-item-thumb">
+              ${i.imageUrl?'<img src="'+i.imageUrl+'" alt="'+i.name+'" style="width:100%;height:100%;object-fit:cover;object-position:center top;">'
+                :'<div class="mini-art '+(i.art||'art-1')+'" style="width:100%;height:100%;"></div>'}
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-family:var(--font-head);font-size:14px;letter-spacing:0.06em;">${i.name}</div>
+              <div style="font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-top:2px;">Size: ${i.size} · Qty: ${i.qty}</div>
+            </div>
+            <span style="color:var(--blue);font-family:var(--font-head);font-size:14px;flex-shrink:0;">₹${(i.price*i.qty).toLocaleString('en-IN')}</span>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:1rem;font-size:11px;color:var(--muted);">Shipping to: ${o.shippingAddress.city}, ${o.shippingAddress.state} — ${o.shippingAddress.pincode}</div>
+        ${o.trackingNumber?'<div style="margin-top:6px;font-size:11px;">Tracking: <span style="color:var(--cyan)">'+o.trackingNumber+'</span></div>':''}
+      </td></tr>`).join('')+
+    '</tbody></table>';
+  }catch{container.innerHTML='<p style="color:var(--muted);padding:1rem">Failed to load orders</p>';}
+}
+function toggleOrderDetail(btn,id){
+  const row=document.getElementById('detail-'+id);
+  const visible=row.style.display!=='none';
+  row.style.display=visible?'none':'table-row';
+  btn.textContent=visible?'+ Details':'− Close';
+}
+renderPage();
+updateCartCount();
+</script>
+</body>
+</html>
